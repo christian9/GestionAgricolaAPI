@@ -2,7 +2,8 @@
   "name": "GestionAgricolaAPI",
   "version": "1.0.0",
   "description": "REST API in Node.js with Hapi.js and Azure Table storage",
-  "main": "server.js",
+  "main": "node server.js",
+  "start": "node server",
   "scripts": {
     "test": "mocha"
   },

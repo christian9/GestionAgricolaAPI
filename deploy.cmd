@@ -2,7 +2,7 @@
 
 :: ----------------------
 :: KUDU Deployment Script
-:: Version: 1.0.13
+:: Version: 0.1.11
 :: ----------------------
 
 :: Prerequisites
@@ -100,12 +100,23 @@ call :SelectNodeVersion
 :: 3. Install npm packages
 IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd !NPM_CMD! install 
+  call :ExecuteCmd !NPM_CMD! install
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )
 
+:: 4. Run Unit  Tests
+pushd "%DEPLOYMENT_TARGET%"
+call :ExecuteCmd !NPM_CMD! run test
+IF !ERRORLEVEL! NEQ 0 goto error
+popd
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:: Post deployment stub
+IF DEFINED POST_DEPLOYMENT_ACTION call "%POST_DEPLOYMENT_ACTION%"
+IF !ERRORLEVEL! NEQ 0 goto error
+
 goto end
 
 :: Execute command routine that will echo out when error
